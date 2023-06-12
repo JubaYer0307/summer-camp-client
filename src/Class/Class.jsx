@@ -25,8 +25,10 @@ const Class = () => {
             <img src={classItem.image} alt={classItem.title} />
           </figure>
           <div className="card-body">
-            <h2 className="card-title">{classItem.title}</h2>
-            <p>{classItem.description}</p>
+            <h2 className="card-title">{classItem.name}</h2>
+            <p>Instructor: {classItem.instructor}</p>
+            <p>Available Seat: {classItem.availableSeats}</p>
+            <p>Price: ${classItem.price}</p>
             <div className="card-actions justify-end">
               <button className="btn btn-primary">Buy Now</button>
             </div>
