@@ -1,27 +1,26 @@
-import { useContext } from "react";
+import  { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../provider/AuthProvider";
 
-
-
-
 const SignUp = () => {
-    const { register, handleSubmit, formState: { errors } } = useForm();
+  const { register, handleSubmit, reset, formState: { errors } } = useForm();
+  const { createUser, updateUserProfile } = useContext(AuthContext);
 
-
-    const {createUser} = useContext(AuthContext)
-
-
-    const onSubmit = data => {
-        console.log(data);
-        createUser(data.email, data.password)
-        .then(result => {
-            const loggedUser = result.user;
-        console.log(loggedUser); 
-         })
-    };
-
+  const onSubmit = data => {
+    console.log(data);
+    createUser(data.email, data.password)
+      .then(result => {
+        const loggedUser = result.user;
+        console.log(loggedUser);
+        updateUserProfile(data.name, data.photo)
+          .then(() => {
+            console.log('user profile updated');
+            reset();
+          })
+          .catch(error => console.log(error));
+      });
+  };
     
 
 
@@ -92,7 +91,7 @@ const SignUp = () => {
                 </label>
                 <input
                   type="text"
-                  name="PhotoURL" {...register("PhotoURL")}
+                  name="photo" {...register("photo")}
                   placeholder="Photo URL"
                   className="input input-bordered" 
                 />

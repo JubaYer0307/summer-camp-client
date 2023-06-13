@@ -1,4 +1,7 @@
-import  { useState, useEffect } from 'react';
+import  { useState, useEffect, useContext } from 'react';
+import { AuthContext } from '../provider/AuthProvider';
+import Swal from 'sweetalert2';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Class = () => {
   const [classes, setClasses] = useState([]);
@@ -6,6 +9,53 @@ const Class = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  const{user} = useContext(AuthContext);
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+
+  const handleSelectedClass = classItem => {
+    console.log(classItem);
+    if(user && user.email) {
+      const selectedItem = {classId: classItem.id, name:classItem.name, image: classItem.image, price: classItem.price, email: user.email}
+      fetch('http://localhost:5000/selectedClass',{
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json'
+        },
+        body: JSON.stringify(selectedItem)
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data.insertedId){
+          Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'Your work has been saved',
+            showConfirmButton: false,
+            timer: 1500
+          })
+        }
+        else{
+          Swal.fire({
+            title: 'Please Login?',
+            
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Login!'
+          }).then((result) => {
+            if (result.isConfirmed) {
+             navigate('/login', {state: {from: location}})
+            }
+          })
+        }
+      })
+    }
+  };
 
   const fetchData = async () => {
     try {
@@ -30,7 +80,7 @@ const Class = () => {
             <p>Available Seat: {classItem.availableSeats}</p>
             <p>Price: ${classItem.price}</p>
             <div className="card-actions justify-end">
-              <button className="btn btn-primary">Select</button>
+              <button onClick={() => handleSelectedClass(classItem)} className="btn btn-primary">Select</button>
             </div>
           </div>
         </div>
