@@ -2,6 +2,7 @@ import  { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../provider/AuthProvider';
 import Swal from 'sweetalert2';
 import { useLocation, useNavigate } from 'react-router-dom';
+import useCart from '../hooks/useCart';
 
 const Class = () => {
   const [classes, setClasses] = useState([]);
@@ -12,6 +13,8 @@ const Class = () => {
 
   const{user} = useContext(AuthContext);
 
+  const [, refetch] = useCart();
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -19,7 +22,7 @@ const Class = () => {
   const handleSelectedClass = classItem => {
     console.log(classItem);
     if(user && user.email) {
-      const selectedItem = {classId: classItem.id, name:classItem.name, image: classItem.image, price: classItem.price, email: user.email}
+      const selectedItem = {classId: classItem.id, name:classItem.name, image: classItem.image, price: classItem.price, email: user.email, instructor:classItem.instructor}
       fetch('http://localhost:5000/selectedClass',{
         method: 'POST',
         headers: {
@@ -30,6 +33,7 @@ const Class = () => {
       .then(res => res.json())
       .then(data => {
         if(data.insertedId){
+          refetch();
           Swal.fire({
             position: 'top-end',
             icon: 'success',
