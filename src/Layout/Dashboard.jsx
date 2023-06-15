@@ -1,12 +1,11 @@
 import { Link, Outlet } from "react-router-dom";
 import { FaShoppingCart, FaWallet, FaCalendar, FaHome } from "react-icons/fa";
-
+import useAuth from "../hooks/useAuth";
+import useAdmin from "../hooks/useAdmin";
 
 const Dashboard = () => {
-
-    // Todo: dynmic admin based on data
-    
-    const isAdmin = true;
+  const { user } = useAuth();
+  const [isAdmin] = useAdmin(user);
 
   return (
     <div className="drawer lg:drawer-open">
@@ -23,36 +22,59 @@ const Dashboard = () => {
       <div className="drawer-side bg-[#535bd1]">
         <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
         <ul className="menu p-4 w-80 h-full text-base-content">
-          {
-            isAdmin ? <>
-            <li>
-            <Link><FaHome></FaHome>Admin Home</Link>
-          </li>
-          <li>
-            <Link><FaCalendar></FaCalendar>Add Class</Link>
-          </li>
-          <li>
-            <Link><FaWallet></FaWallet>Manage Classes</Link>
-          </li>
-          <li>
-            <Link to='/dashboard/manageUsers'><FaShoppingCart></FaShoppingCart>Manage Users</Link>
-          </li>
-         </> : <>
-            <li>
-            <Link><FaHome></FaHome>User Home</Link>
-          </li>
-          <li>
-            <Link><FaCalendar></FaCalendar>My Enrolled Classes</Link>
-          </li>
-          <li>
-            <Link><FaWallet></FaWallet>Payment History</Link>
-          </li>
-          <li>
-            <Link to='/dashboard/mycart'><FaShoppingCart></FaShoppingCart>My Cart</Link>
-          </li>
-          </>
-          }
-          
+          { (
+            <>
+              <li>
+                <Link to="/"><FaHome></FaHome>Home</Link>
+              </li>
+              
+              <li>
+                <Link to="/dashboard/manageClass"><FaHome></FaHome>Manage Classes</Link>
+              </li>
+              <li>
+                <Link to="/dashboard/manageUsers"><FaShoppingCart></FaShoppingCart>Manage Users</Link>
+              </li>
+              <div className="divider"></div> 
+              <li>
+                <Link to="/"><FaHome></FaHome>Home</Link>
+              </li>
+            </>
+          )}
+          { (
+            <>
+             
+              <li>
+                <Link to="/dashboard/enrolledClass"><FaCalendar></FaCalendar>My Enrolled Classes</Link>
+              </li>
+              <li>
+                <Link to="/dashboard/payment"><FaWallet></FaWallet>Payment History</Link>
+              </li>
+              <li>
+                <Link to="/dashboard/mycart"><FaShoppingCart></FaShoppingCart>My Cart</Link>
+              </li>
+              <li>
+                <Link to="/dashboard/enrolledClass"><FaShoppingCart></FaShoppingCart>My enrolled class</Link>
+              </li>
+              <div className="divider"></div> 
+              <li>
+                <Link to="/"><FaHome></FaHome>Home</Link>
+              </li>
+            </>
+          )}
+          { (
+            <>
+              <li>
+                <Link to="/dashboard/addClass"><FaHome></FaHome>Add Class</Link>
+              </li>
+              <li>
+                <Link to="/dashboard/myClasses"><FaHome></FaHome>My Classes</Link>
+              </li>
+              
+              
+              
+              
+            </>
+          )}
         </ul>
       </div>
     </div>
