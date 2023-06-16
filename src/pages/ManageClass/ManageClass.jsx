@@ -16,7 +16,7 @@ const ManageClass = () => {
     const updatedClass = {
       status: 'approved',
     };
-
+  
     axiosSecure.patch(`/classes/${classId}`, updatedClass).then((res) => {
       if (res.data.success) {
         Swal.fire({
@@ -38,6 +38,7 @@ const ManageClass = () => {
       }
     });
   };
+  
 
   const handleDeny = (classId) => {
     const updatedClass = {

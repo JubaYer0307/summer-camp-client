@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import Swal from "sweetalert2";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
+
 const ManageUsers = () => {
   const [axiosSecure] = useAxiosSecure();
 
@@ -12,13 +13,17 @@ const ManageUsers = () => {
   });
 
   const handleMakeAdmin = (user) => {
-    fetch(`http://localhost:5000/users/admin/${user._id}`, {
+    fetch(`https://photo-me-server.vercel.app/users/${user._id}`, {
       method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ role: 'admin' }), // Update the user's role to 'admin'
     })
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        if (data.modifiedCount) {
+        if (data.success) { // Check if the update was successful
           refetch();
           Swal.fire({
             position: 'top-end',
@@ -30,15 +35,19 @@ const ManageUsers = () => {
         }
       });
   };
-
+  
   const handleMakeInstructor = (user) => {
-    fetch(`http://localhost:5000/users/instructor/${user._id}`, {
+    fetch(`https://photo-me-server.vercel.app/users/${user._id}`, {
       method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ role: 'instructor' }), // Update the user's role to 'instructor'
     })
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        if (data.modifiedCount) {
+        if (data.success) { // Check if the update was successful
           refetch();
           Swal.fire({
             position: 'top-end',
@@ -50,6 +59,7 @@ const ManageUsers = () => {
         }
       });
   };
+  
 
   
 

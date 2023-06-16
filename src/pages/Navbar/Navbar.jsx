@@ -30,17 +30,13 @@ const Navbar = () => {
         <Link to="/class">Classes</Link>
       </li>
 
+      {user  && (
       <li>
-        <a>Dashboard</a>
+        <Link to="/dashboard">Dashboard</Link>
       </li>
-      <li>
-        <Link to='/dashboard/mycart'>
-          <button className="btn">
-            <FaShoppingCart></FaShoppingCart>
-            <div className="badge badge-secondary">{cart?.length || 0}</div>
-          </button>
-        </Link>
-      </li>
+    )}
+     
+      
     </>
   );
 

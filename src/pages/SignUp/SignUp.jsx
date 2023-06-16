@@ -1,4 +1,4 @@
-import  { useContext } from "react";
+import  { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../provider/AuthProvider";
@@ -7,6 +7,7 @@ import SocialLogin from "../SocialLogin/SocialLogin";
 const SignUp = () => {
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
   const { createUser, updateUserProfile } = useContext(AuthContext);
+  const [redirectToHome, setRedirectToHome] = useState(false);
 
   const onSubmit = data => {
    
@@ -18,7 +19,7 @@ const SignUp = () => {
           .then(() => {
             const saveUser = { name: data.name, email: data.email}
 
-            fetch('http://localhost:5000/users', {
+            fetch('https://photo-me-server.vercel.app/users', {
               method: 'POST',
               headers: {
                 'content-type' : 'application/json'
@@ -30,6 +31,7 @@ const SignUp = () => {
               if(data.insertedId){
 
                 reset();
+                setRedirectToHome(true);
                 
               }
             })
@@ -38,7 +40,12 @@ const SignUp = () => {
           })
           .catch(error => console.log(error));
       });
+      
   };
+  if (redirectToHome) {
+    window.location.href = '/'; // Redirect to the home page
+  }
+ 
     
 
 

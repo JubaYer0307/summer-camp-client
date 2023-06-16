@@ -1,11 +1,16 @@
 import { Link, Outlet } from "react-router-dom";
 import { FaShoppingCart, FaWallet, FaCalendar, FaHome } from "react-icons/fa";
+import { motion } from "framer-motion";
 import useAuth from "../hooks/useAuth";
 import useAdmin from "../hooks/useAdmin";
+import useInstructor from "../hooks/useInstructor";
 
 const Dashboard = () => {
   const { user } = useAuth();
   const [isAdmin] = useAdmin(user);
+  const [isInstructor] = useInstructor(user);
+ 
+  console.log('isAdmin:', isAdmin);
 
   return (
     <div className="drawer lg:drawer-open">
@@ -22,56 +27,121 @@ const Dashboard = () => {
       <div className="drawer-side bg-[#535bd1]">
         <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
         <ul className="menu p-4 w-80 h-full text-base-content">
-          { (
+          {isAdmin && (
             <>
-              <li>
-                <Link to="/"><FaHome></FaHome>Home</Link>
-              </li>
-              
-              <li>
-                <Link to="/dashboard/manageClass"><FaHome></FaHome>Manage Classes</Link>
-              </li>
-              <li>
-                <Link to="/dashboard/manageUsers"><FaShoppingCart></FaShoppingCart>Manage Users</Link>
-              </li>
-              <div className="divider"></div> 
-              <li>
-                <Link to="/"><FaHome></FaHome>Home</Link>
-              </li>
+              <motion.li
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <Link to="/">
+                  <FaHome />
+                  Home
+                </Link>
+              </motion.li>
+
+              <motion.li
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <Link to="/dashboard/manageClass">
+                  <FaHome />
+                  Manage Classes
+                </Link>
+              </motion.li>
+
+              <motion.li
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <Link to="/dashboard/manageUsers">
+                  <FaShoppingCart />
+                  Manage Users
+                </Link>
+              </motion.li>
+
+              <div className="divider"></div>
             </>
           )}
-          { (
+
+          {isInstructor && (
             <>
-             
-              <li>
-                <Link to="/dashboard/enrolledClass"><FaCalendar></FaCalendar>My Enrolled Classes</Link>
-              </li>
-              <li>
-                <Link to="/dashboard/payment"><FaWallet></FaWallet>Payment History</Link>
-              </li>
-              <li>
-                <Link to="/dashboard/mycart"><FaShoppingCart></FaShoppingCart>My Cart</Link>
-              </li>
-              <li>
-                <Link to="/dashboard/enrolledClass"><FaShoppingCart></FaShoppingCart>My enrolled class</Link>
-              </li>
-              <div className="divider"></div> 
-              <li>
-                <Link to="/"><FaHome></FaHome>Home</Link>
-              </li>
+              <motion.li
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <Link to="/">
+                  <FaHome />
+                  Home
+                </Link>
+              </motion.li>
+
+              <motion.li
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <Link to="/dashboard/addClass">
+                  <FaHome />
+                  Add Class
+                </Link>
+              </motion.li>
+
+              <motion.li
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <Link to="/dashboard/myClasses">
+                  <FaHome />
+                  My Classes
+                </Link>
+              </motion.li>
+
+              <div className="divider"></div>
             </>
           )}
-          { (
+
+          {!isAdmin && !isInstructor && (
             <>
-              <li>
-                <Link to="/dashboard/addClass"><FaHome></FaHome>Add Class</Link>
-              </li>
-              <li>
-                <Link to="/dashboard/myClasses"><FaHome></FaHome>My Classes</Link>
-              </li>
-              
-              
-              
+              <motion.li
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <Link to="/">
+                  <FaHome />
+                  Home
+                </Link>
+              </motion.li>
+              <motion.li
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <Link to="/dashboard/mycart">
+                  <FaShoppingCart />
+                  My Cart
+                </Link>
+              </motion.li>
+
+              <motion.li
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <Link to="/dashboard/enrolledClass">
+                  <FaCalendar />
+                  My Enrolled Classes
+                </Link>
+              </motion.li>
+
+              <motion.li
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <Link to="/dashboard/paymentHistory">
+                  <FaWallet />
+                  Payment History
+                </Link>
+              </motion.li>
+
+              <div className="divider"></div>
+
               
             </>
           )}

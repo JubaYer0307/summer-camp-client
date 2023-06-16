@@ -1,10 +1,9 @@
-// Import necessary dependencies
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useEffect, useState } from "react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import useAuth from "../../hooks/useAuth";
+import useCart from "../../hooks/useCart";
 
-// Create the CheckoutForm component
 const CheckoutForm = ({ cart, price }) => {
   const stripe = useStripe();
   const elements = useElements();
@@ -14,15 +13,33 @@ const CheckoutForm = ({ cart, price }) => {
   const [clientSecret, setClientSecret] = useState("");
   const [processing, setProcessing] = useState(false);
   const [transactionId, setTransactionId] = useState("");
+  const [refetch] = useCart();
 
   useEffect(() => {
     if (price > 0) {
       axiosSecure.post("/create-payment-intent", { price }).then((res) => {
-        console.log(res.data.clientSecret);
         setClientSecret(res.data.clientSecret);
       });
     }
   }, [price, axiosSecure]);
+
+  const handleDelete2 = (item) => {
+    const confirmDelete = confirm("Press Ok to confirm");
+    if (confirmDelete) {
+      fetch(`https://photo-me-server.vercel.app/selectedClass/${item._id}`, {
+        method: 'DELETE'
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.deletedCount > 0) {
+            refetch();
+            console.log("Deleted!");
+          }
+        })
+    }
+  };
+
+  
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -81,11 +98,12 @@ const CheckoutForm = ({ cart, price }) => {
         status: "service pending",
         itemNames: cart.map((item) => item.name),
       };
-      
+
       axiosSecure.post("/save-payment", payment).then((res) => {
         console.log(res.data);
         // Handle the response or display a confirmation message
       });
+      handleDelete2(cart[0]);
     }
   };
 
@@ -110,7 +128,7 @@ const CheckoutForm = ({ cart, price }) => {
         />
         <button
           type="submit"
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mt-4 rounded"
+          className="bg-blue-300 bg-none hover:bg-blue-300 text-white font-bold py-2 px-4 mt-4 rounded"
           disabled={!stripe || processing}
         >
           {processing ? "Processing..." : "Pay"}

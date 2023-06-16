@@ -1,4 +1,4 @@
-import  { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../provider/AuthProvider';
 import Swal from 'sweetalert2';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -11,61 +11,68 @@ const Class = () => {
     fetchData();
   }, []);
 
-  const{user} = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
 
   const [, refetch] = useCart();
 
   const navigate = useNavigate();
   const location = useLocation();
 
-
-  const handleSelectedClass = classItem => {
+  const handleSelectedClass = (classItem) => {
     console.log(classItem);
-    if(user && user.email) {
-      const selectedItem = {classId: classItem.id, name:classItem.name, image: classItem.image, price: classItem.price, email: user.email, instructor:classItem.instructor}
-      fetch('http://localhost:5000/selectedClass',{
+    if (user && user.email) {
+      const selectedItem = {
+        classId: classItem.id,
+        name: classItem.name,
+        image: classItem.image,
+        price: classItem.price,
+        email: user.email,
+        instructor: classItem.instructor,
+      };
+      fetch('https://photo-me-server.vercel.app/selectedClass', {
         method: 'POST',
         headers: {
-          'content-type': 'application/json'
+          'content-type': 'application/json',
         },
-        body: JSON.stringify(selectedItem)
+        body: JSON.stringify(selectedItem),
       })
-      .then(res => res.json())
-      .then(data => {
-        if(data.insertedId){
-          refetch();
-          Swal.fire({
-            position: 'top-end',
-            icon: 'success',
-            title: 'Your work has been saved',
-            showConfirmButton: false,
-            timer: 1500
-          })
-        }
-        else{
-          Swal.fire({
-            title: 'Please Login?',
-            
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Login!'
-          }).then((result) => {
-            if (result.isConfirmed) {
-             navigate('/login', {state: {from: location}})
-            }
-          })
-        }
-      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.insertedId) {
+            refetch();
+            Swal.fire({
+              position: 'top-end',
+              icon: 'success',
+              title: 'Your work has been saved',
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          } else {
+            Swal.fire({
+              title: 'Please Login?',
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Login!',
+            }).then((result) => {
+              if (result.isConfirmed) {
+                navigate('/login', { state: { from: location } });
+              }
+            });
+          }
+        });
     }
   };
 
   const fetchData = async () => {
     try {
-      const response = await fetch('http://localhost:5000/classes');
+      const response = await fetch('https://photo-me-server.vercel.app/classes');
       const data = await response.json();
-      setClasses(data);
+      const filteredClasses = data.filter(
+        (classItem) => classItem.status !== 'pending' && classItem.status !== 'denied'
+      );
+      setClasses(filteredClasses);
     } catch (error) {
       console.error('Error fetching classes:', error);
     }
@@ -84,7 +91,12 @@ const Class = () => {
             <p>Available Seat: {classItem.availableSeats}</p>
             <p>Price: ${classItem.price}</p>
             <div className="card-actions justify-end">
-              <button onClick={() => handleSelectedClass(classItem)} className="btn btn-primary">Select</button>
+              <button
+                onClick={() => handleSelectedClass(classItem)}
+                className="btn btn-primary"
+              >
+                Select
+              </button>
             </div>
           </div>
         </div>

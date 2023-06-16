@@ -14,7 +14,7 @@ const MyCart = () => {
   const [selectedClass, setSelectedClass] = useState(null);
   const total = cart.reduce((sum, item) => item.price + sum, 0);
 
-  const handleDelete = item => {
+  const handleDelete = (item) => {
     Swal.fire({
       title: 'Are you sure?',
       text: "You won't be able to revert this!",
@@ -25,7 +25,7 @@ const MyCart = () => {
       confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://localhost:5000/selectedClass/${item._id}`, {
+        fetch(`https://photo-me-server.vercel.app/selectedClass/${item._id}`, {
           method: 'DELETE'
         })
           .then(res => res.json())
@@ -43,16 +43,12 @@ const MyCart = () => {
     })
   };
 
-  const handlePay = item => {
+  const handlePay = (item) => {
     setSelectedClass(item);
   };
 
   return (
     <div className="w-full">
-      <div className="uppercase h-[65px] font-semibold flex justify-evenly items-center">
-        <h2>Total item: {cart.length}</h2>
-        <h2>Total Price: ${total}</h2>
-      </div>
       <div className="overflow-x-auto">
         <table className="table">
           <thead>
@@ -93,11 +89,13 @@ const MyCart = () => {
           </tbody>
         </table>
       </div>
-      {selectedClass && (
-        <Elements stripe={stripePromise}>
-          <CheckoutForm cart={[selectedClass]} price={selectedClass.price} />
-        </Elements>
-      )}
+      <div className="bg-blue-500">
+        {selectedClass && (
+          <Elements stripe={stripePromise}>
+            <CheckoutForm cart={[selectedClass]} price={selectedClass.price} />
+          </Elements>
+        )}
+      </div>
     </div>
   );
 };
